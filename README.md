@@ -17,27 +17,8 @@ This was completed as part of Week 2 of a structured AWS learning program.
 ---
 
 ## Architecture Diagram
-```
-                        ┌─────────────────────────────────────────────┐
-                        │              VPC: 10.0.0.0/16               │
-                        │                                             │
-         Internet       │  ┌──────────────┐   ┌──────────────┐        │
-            │           │  │ Public Sub A │   │ Public Sub B │        │
-            ▼           │  │ 10.0.1.0/24  │   │ 10.0.2.0/24  │        │
-      ┌──────────┐      │  │              │   │              │        │
-      │   IGW    │◄─────┼──│     ALB      │   │  NAT GW      │        │
-      └──────────┘      │  └──────┬───────┘   └──────┬───────┘        │
-                        │         │                   │               │
-                        │  ┌──────▼───────┐   ┌──────▼───────┐        │
-                        │  │ Private Sub A│   │ Private Sub B│        │
-                        │  │ 10.0.11.0/24 │   │ 10.0.12.0/24 │        │
-                        │  │   EC2 (AZ-A) │   │   EC2 (AZ-B) │        │
-                        │  └──────────────┘   └──────────────┘        │
-                        │         Auto Scaling Group (min: 2)         │
-                        └─────────────────────────────────────────────┘
-```
-> Full diagram available in `/diagrams/week2-architecture.drawio`
 
+![Architecture Diagram](diagrams/week2-architecture.drawio)
 ---
 
 ## Components
