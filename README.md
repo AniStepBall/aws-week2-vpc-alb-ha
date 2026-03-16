@@ -108,13 +108,13 @@ The browser was refreshed continuously during the replacement. The page remained
 
 | Screenshot | Description |
 |---|---|
-| `screenshots/01-vpc-subnets.png` | VPC subnet list with public/private labels |
-| `screenshots/02-route-tables.png` | Public route table (IGW) vs private (NAT) |
-| `screenshots/03-alb-listeners.png` | ALB listener forwarding HTTP:80 to target group |
-| `screenshots/04-healthy-targets.png` | Both targets showing "healthy" status |
-| `screenshots/05-asg-activity.png` | ASG activity log during termination + replacement |
-| `screenshots/06-browser-az-a.png` | Browser showing Instance ID from AZ-A |
-| `screenshots/07-browser-az-b.png` | Browser showing Instance ID from AZ-B |
+| `screenshots/vpc-subnets.png` | VPC subnet list with public/private labels |
+| `screenshots/route-tables.png` | Public route table (IGW) vs private (NAT) |
+| `screenshots/alb-listeners.png` | ALB listener forwarding HTTP:80 to target group |
+| `screenshots/healthy-targets.png` | Both targets showing "healthy" status |
+| `screenshots/asg-activity.png` | ASG activity log during termination + replacement |
+| `screenshots/browser-az-a.png` | Browser showing Instance ID from AZ-A |
+| `screenshots/browser-az-b.png` | Browser showing Instance ID from AZ-B |
 
 ---
 
