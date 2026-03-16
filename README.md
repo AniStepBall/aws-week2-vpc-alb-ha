@@ -1,5 +1,5 @@
 # aws-week2-vpc-alb-ha
-An available, secure web tier on AWS built with a custom VPC, Application Load Balancer, and Auto Scaling Group across two Availability Zones.
+A highly available, secure web tier on AWS built with a custom VPC, Application Load Balancer, and Auto Scaling Group across two Availability Zones.
 
 ---
 
@@ -111,29 +111,6 @@ The browser was refreshed continuously during the replacement. The page remained
 | **Total (24 hrs)** | **~$2–4** |
 
 > ⚠️ NAT Gateway is the biggest cost driver. Always delete it when not actively using the environment.
-
----
-
-## Troubleshooting Guide
-
-**Problem: ALB DNS shows 502 Bad Gateway**
-- Check Target Group → Targets tab — are instances "healthy"?
-- Instances may still be booting. Wait 2–3 minutes for user data script to finish.
-- Verify the EC2 security group allows port 80 from the ALB security group.
-
-**Problem: Target group shows instances as "unhealthy"**
-- SSH into an instance (via bastion or SSM) and run `curl localhost` — is nginx responding?
-- Check that the health check path is `/` and nginx is serving on port 80.
-- Confirm the instance security group inbound rule references the ALB SG, not an IP.
-
-**Problem: ASG not launching instances into private subnets**
-- Confirm the ASG subnet config points to the private subnets, not public ones.
-- Check that private subnets have a route to the NAT Gateway.
-
-**Problem: NAT Gateway not providing internet access to private instances**
-- Verify the private route table has `0.0.0.0/0 → NAT Gateway`.
-- Confirm the NAT Gateway is in a **public** subnet (common mistake: placing it in private).
-- Check the NAT Gateway status is "Available" (not "Pending").
 
 ---
 
