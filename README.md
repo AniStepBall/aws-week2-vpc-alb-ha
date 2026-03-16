@@ -112,23 +112,6 @@ The browser was refreshed continuously during the replacement. The page remained
 
 > ⚠️ NAT Gateway is the biggest cost driver. Always delete it when not actively using the environment.
 
-### Teardown Order
-
-Delete resources in this exact order to avoid dependency errors:
-
-```
-1. Delete Auto Scaling Group       → terminates EC2 instances automatically
-2. Delete Application Load Balancer
-3. Delete Target Group
-4. Delete NAT Gateway              ← critical for cost
-5. Release Elastic IP              ← NAT Gateway allocates one
-6. Delete Subnets
-7. Delete Route Tables
-8. Detach + Delete Internet Gateway
-9. Delete VPC
-10. Delete S3 log bucket (if created)
-```
-
 ---
 
 ## Troubleshooting Guide
