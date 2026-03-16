@@ -18,7 +18,7 @@ This was completed as part of Week 2 of a structured AWS learning program.
 
 ## Architecture Diagram
 
-![Architecture Diagram](diagrams/week2-architecture.drawio)
+![Architecture Diagram](diagrams/week2-architecture.png)
 ---
 
 ## Components
