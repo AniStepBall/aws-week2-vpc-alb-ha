@@ -1,6 +1,9 @@
 # aws-week2-vpc-alb-ha
-A highly available, secure web tier on AWS built with a custom VPC, Application Load Balancer, and Auto Scaling Group across two Availability Zones.
+A highly available, secure web tier on AWS built with a custom VPC, Application Load Balancer, and Auto Scaling Group across two Availability Zones. This project implements a production-style web tier on AWS designed for high availability, fault tolerance, and secure network isolation.
 
+The system distributes traffic across multiple Availability Zones using an Application Load Balancer and maintains service continuity through Auto Scaling and health checks.
+
+This project focuses on how infrastructure behaves under failure — not just how it is deployed.
 ---
 
 ## Objective
@@ -20,7 +23,15 @@ This was completed as part of Week 2 of a structured AWS learning program.
 
 ![Architecture Diagram](diagrams/week2-architecture.png)
 ---
+## Request Flow
 
+1. A user sends a request to the Application Load Balancer (ALB)
+2. The ALB receives traffic via public subnets across two Availability Zones
+3. The ALB forwards traffic to a target group of EC2 instances
+4. EC2 instances run in private subnets and respond to the request
+5. Health checks continuously monitor instance availability
+6. If an instance fails, Auto Scaling replaces it automatically
+   
 ## Components
 
 | Resource | Name | Purpose |
@@ -42,7 +53,11 @@ This was completed as part of Week 2 of a structured AWS learning program.
 ---
 
 ## Security Model
-
+- EC2 instances are deployed in private subnets and are not directly accessible from the internet
+- Only the ALB security group is allowed to communicate with EC2 instances
+- Security group referencing is used instead of IP-based rules for dynamic scaling
+- Outbound internet access for instances is provided via NAT Gateway
+- No direct SSH access is enabled — access would be handled via SSM or bastion host in production
 ### Security Group Rules
 
 **ALB Security Group (`week2-sg-alb`)**
@@ -65,7 +80,42 @@ This was completed as part of Week 2 of a structured AWS learning program.
 - No SSH open to the internet — bastion host or SSM would be used for access in production
 
 ---
+## Design Decisions and Tradeoffs
 
+### Single NAT Gateway
+A single NAT Gateway was used to reduce cost during development.
+
+Tradeoff:
+- Lower cost
+- Introduces a single point of failure for outbound traffic
+
+Production alternative:
+- One NAT Gateway per Availability Zone for full resilience
+
+---
+
+### EC2-Based Web Tier
+The application runs directly on EC2 instances using a launch template.
+
+Tradeoff:
+- Simpler to configure and understand
+- Less portable and harder to scale compared to container-based deployments
+
+Next step:
+- Replace with Docker-based deployment and CI/CD pipeline
+
+---
+
+### No SSH Access
+SSH was not exposed to the internet.
+
+Tradeoff:
+- Improves security posture
+- Makes debugging more difficult
+
+Production alternative:
+- Use AWS Systems Manager (SSM) or a bastion host
+  
 ## HA Test Evidence
 
 ### Test: Instance Termination + Auto Recovery
@@ -85,6 +135,11 @@ The browser was refreshed continuously during the replacement. The page remained
 
 **Result:** Zero downtime. Service remained available during instance failure and replacement.
 
+## High Availability Validation
+Result: Zero downtime observed. Traffic continued to be served throughout instance termination and replacement.
+
+This demonstrates that load balancing, health checks, and Auto Scaling are correctly integrated.
+
 ### Screenshots
 
 | Screenshot | Description |
@@ -98,7 +153,15 @@ The browser was refreshed continuously during the replacement. The page remained
 | `screenshots/browser-az-b.png` | Browser showing Instance ID from AZ-B |
 
 ---
+## Production Improvements
 
+- Add HTTPS using AWS Certificate Manager (ACM)
+- Introduce Web Application Firewall (WAF) for security
+- Implement centralized logging (CloudWatch Logs / ELK)
+- Use container orchestration (ECS or EKS) instead of EC2-based deployment
+- Deploy NAT Gateway per AZ for full fault tolerance
+- Add scaling policies based on CPU or request count
+  
 ## Costs & Teardown
 
 ### Estimated Costs (if left running 24 hrs)
@@ -123,7 +186,13 @@ The browser was refreshed continuously during the replacement. The page remained
 - **SG referencing SG** — More secure and dynamic than IP allowlists; works even as instances are replaced
 
 ---
+## Key Takeaways
 
+- High availability requires coordination between load balancing and scaling
+- Private subnets significantly reduce attack surface
+- Auto Scaling Groups enable self-healing infrastructure
+- Testing failure scenarios is essential to validate system design
+  
 ## Region
 
 `ca-central-1` (Canada)
